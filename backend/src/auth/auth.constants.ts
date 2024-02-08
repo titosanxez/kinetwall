@@ -1,3 +1,4 @@
 export const jwtConstants = {
-  secret: crypto.getRandomValues(new Int8Array(64)).toString(),
+  secret:
+    'this is not a secret; instead one should be obtained from the key manager',
 }
