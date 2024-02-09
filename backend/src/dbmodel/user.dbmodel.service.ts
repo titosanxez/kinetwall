@@ -18,7 +18,7 @@ export class DbServiceUsers {
     });
   }
 
-  create(entity: Omit<DbEntityUser, 'id'>): Promise<DbEntityUser> {
+  create(entity: Omit<DbEntityUser, 'userId'>): Promise<DbEntityUser> {
     return this.userRepository.save(entity);
   }
 }
