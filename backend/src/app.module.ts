@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DbmodelModule } from './dbmodel/dbmodel.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EthModule } from './eth/eth.module';
+import { WalletModule } from './wallet/wallet.module';
 
 function getPostgresConfiguration(configService: ConfigService): any {
   const enableSslConfig =
@@ -46,6 +48,8 @@ function getPostgresConfiguration(configService: ConfigService): any {
     AuthModule,
     UsersModule,
     DbmodelModule,
+    EthModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [AppService],

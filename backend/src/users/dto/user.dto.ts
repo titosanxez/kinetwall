@@ -2,7 +2,7 @@ import { IsEmail, IsJWT, IsOptional, IsString } from 'class-validator';
 
 export class UserDto {
   @IsString()
-  id: string;
+  userId: string;
 
   @IsString()
   username: string;
