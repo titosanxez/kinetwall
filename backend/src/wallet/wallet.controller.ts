@@ -32,6 +32,4 @@ export class WalletController {
       addWalletDto.address,
     );
   }
-
-  //0x0B2E60B91ee653202764Fb5D43942A5c1c38C1d8
 }

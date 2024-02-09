@@ -18,6 +18,14 @@ export class DbServiceUsers {
     });
   }
 
+  getById(id: string): Promise<DbEntityUser> {
+    return this.userRepository.findOne({
+      where: {
+        userId: id,
+      },
+    });
+  }
+
   create(entity: Omit<DbEntityUser, 'userId'>): Promise<DbEntityUser> {
     return this.userRepository.save(entity);
   }

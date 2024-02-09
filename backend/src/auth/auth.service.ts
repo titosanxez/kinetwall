@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserDto } from '../users/dto/user.dto';
 import { DbServiceUsers } from '../dbmodel/user.dbmodel.service';
+import { jwtConstants } from './auth.constants';
 
 const SALT_OR_ROUNDS = 10;
 
@@ -57,5 +58,21 @@ export class AuthService {
       ...forUser,
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  public getUserFromAuthenticationToken(
+    token: string,
+  ): Promise<UserDto | undefined> {
+    const payload = this.jwtService.verify(token, {
+      secret: jwtConstants.secret,
+    });
+    if (payload.sub) {
+      return this.findUser(payload.sub);
+    }
+  }
+
+  async findUser(userId: string): Promise<UserDto> {
+    const { passwordHash, ...user } = await this.dbUsers.getById(userId);
+    return user;
   }
 }
