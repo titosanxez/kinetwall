@@ -8,6 +8,8 @@ import { DbmodelModule } from './dbmodel/dbmodel.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EthModule } from './eth/eth.module';
 import { WalletModule } from './wallet/wallet.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 function getPostgresConfiguration(configService: ConfigService): any {
   const enableSslConfig =
@@ -25,7 +27,7 @@ function getPostgresConfiguration(configService: ConfigService): any {
     port: 5432,
     username: 'postgres',
     password: configService.get<string>('DB_PASS'),
-    database: 'kinwallet',
+    database: 'kinetwall',
     retryAttempts: 0,
     autoLoadEntities: true,
     ...enableSslConfig,
@@ -44,6 +46,14 @@ function getPostgresConfiguration(configService: ConfigService): any {
       useFactory: getPostgresConfiguration,
       inject: [ConfigService],
     }),
+    // Throttling
+    ThrottlerModule.forRoot([
+      {
+        // 100 requests/min
+        ttl: 60 * 1000,
+        limit: 100,
+      },
+    ]),
     // App modules
     AuthModule,
     UsersModule,
@@ -52,6 +62,12 @@ function getPostgresConfiguration(configService: ConfigService): any {
     WalletModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}

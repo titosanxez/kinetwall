@@ -16,8 +16,17 @@ import { WalletService } from './wallet.service';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: ['http://localhost:3030'],
+    preflightContinue: false,
     credentials: true,
+    methods: ['GET', 'POST'],
+    allowedHeaders: [
+      'Content-Type',
+      'Origin',
+      'Authorization',
+      'sec-websocket-protocol',
+    ],
+    exposedHeaders: ['sec-websocket-protocol'],
   },
   allowEIO3: true,
 })
@@ -93,7 +102,10 @@ export class WalletLiveService
   }
 
   async handleConnection(client: Socket, ...args: any[]) {
-
+    client.emit('headers', {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+    });
   }
 }
 

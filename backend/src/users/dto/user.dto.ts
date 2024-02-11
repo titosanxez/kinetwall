@@ -7,9 +7,6 @@ export class UserDto {
   @IsString()
   username: string;
 
-  @IsEmail()
-  email: string;
-
   @IsOptional()
   @IsJWT()
   access_token?: string;

@@ -11,7 +11,7 @@ import useWebSocket from "react-use-websocket"
 export default function Dashboard() {
   let [wallets, setWallets] = React.useState<WalletProps[]>([])
   let auth = useAuth();
-  const WS_URL = `ws://${process.env.REACT_APP_KINETWALL_WEB_HOST_URL}:3000`
+  const WS_URL = `ws://${process.env.REACT_APP_KINETWALL_WEB_HOST_URL}`
   const { lastMessage } = useWebSocket(
     WS_URL,
     {
@@ -40,7 +40,10 @@ export default function Dashboard() {
     if (lastMessage?.type === 'message') {
       const eventPayload = JSON.parse(lastMessage.data.match(/\[.*]/));
       if (Array.isArray(eventPayload) && Array.isArray(eventPayload[1])) {
-        setWallets(eventPayload[1])
+        const userWallets = eventPayload[1];
+        if (JSON.stringify(userWallets) !== JSON.stringify(wallets)) {
+          setWallets(userWallets);
+        }
       }
     }
   }, [lastMessage]);

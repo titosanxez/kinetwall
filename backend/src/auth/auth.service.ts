@@ -21,10 +21,6 @@ export class AuthService {
   ): Promise<UserDto> {
     const dbUser = await this.dbUsers.find(username);
     if (!dbUser) {
-      // Check for required information
-      if (!request.body.email) {
-        throw new Error('Email is required');
-      }
 
       // Create a new user
       const newUserPasswordHash = await bcrypt.hash(
@@ -34,7 +30,6 @@ export class AuthService {
       const { passwordHash, ...newUser } = await this.dbUsers.create({
         username: username,
         passwordHash: new Buffer(newUserPasswordHash),
-        email: request.body.email,
       });
 
       return newUser;

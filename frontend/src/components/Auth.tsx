@@ -21,7 +21,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   let login = async (credentials: LoginCredentials) => {
     const loggedUser = await WalletController.login(credentials);
-    console.log(loggedUser)
     if (loggedUser.access_token) {
       setUser(loggedUser)
     }

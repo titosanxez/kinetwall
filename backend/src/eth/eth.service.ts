@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Alchemy, BigNumber, Network } from 'alchemy-sdk';
-
-const config = {
-  apiKey: 'tSPFiNpDtQdsHcd5TMX_qp3iV--J2r_a', // Replace with your Alchemy API key.
-  network: Network.ETH_SEPOLIA, // Replace with your network.
-};
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EthService {
   private provider: Alchemy;
-  constructor() {
-    this.provider = new Alchemy(config);
+  constructor(private configService: ConfigService) {
+    this.provider = new Alchemy({
+      apiKey: this.configService.get<string>('ETH_PROVIDER_APIKEY'),
+      network: Network.ETH_SEPOLIA,
+    });
   }
 
   async getBalance(address: string): Promise<BigNumber> {

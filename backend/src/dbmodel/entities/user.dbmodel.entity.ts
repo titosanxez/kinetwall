@@ -8,9 +8,6 @@ export class DbEntityUser {
   @Column({ type: 'text' })
   username: string;
 
-  @Column({ type: 'text' })
-  email: string;
-
   @Column({ name: 'password_hash', type: 'bytea' })
   passwordHash: Buffer;
 }

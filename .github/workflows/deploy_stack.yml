@@ -1,0 +1,32 @@
+name: Deploy stack
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/deploy/stack**'
+      - '.github/workflows/deploy_stack.yml'
+
+jobs:
+  create-stack:
+    name: Deploys AWS stack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: kinetwall-cluster
+          template: backend/deploy/stack/service.json
+

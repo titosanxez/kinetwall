@@ -19,14 +19,14 @@ export interface WalletProps {
   balance: string
 }
 
-const WALLET_WEB_URL = `http://${process.env.REACT_APP_KINETWALL_WEB_HOST_URL}:3000`;
+const WALLET_WEB_URL = `http://${process.env.REACT_APP_KINETWALL_WEB_HOST_URL}`;
 
 const WalletController = {
   async login(credentials: LoginCredentials): Promise<LoggedUserType> {
     const response = await fetch(`${WALLET_WEB_URL}/users/login`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(credentials)
     });
@@ -43,12 +43,11 @@ const WalletController = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.access_token}`
+        'Authorization': `Bearer ${user.access_token}`,
       },
     });
 
     const responseData = await response.json();
-    console.log(response)
     if (response.status !== 200) {
       throw new Error(responseData);
     }
@@ -60,7 +59,7 @@ const WalletController = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.access_token}`
+        'Authorization': `Bearer ${user.access_token}`,
       },
       body: JSON.stringify({ address: address })
     });
