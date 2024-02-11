@@ -19,10 +19,11 @@ export interface WalletProps {
   balance: string
 }
 
+const WALLET_WEB_URL = `http://${process.env.REACT_APP_KINETWALL_WEB_HOST_URL}:3000`;
 
 const WalletController = {
   async login(credentials: LoginCredentials): Promise<LoggedUserType> {
-    const response = await fetch('http://localhost:3000/users/login', {
+    const response = await fetch(`${WALLET_WEB_URL}/users/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +39,7 @@ const WalletController = {
   },
 
   async wallets(user:LoggedUserType): Promise<WalletProps[]> {
-    const response = await fetch('http://localhost:3000/wallets', {
+    const response = await fetch(`${WALLET_WEB_URL}/wallets`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ const WalletController = {
   },
 
   async connect(user:LoggedUserType, address: string): Promise<WalletProps> {
-    const response = await fetch('http://localhost:3000/wallets', {
+    const response = await fetch(`${WALLET_WEB_URL}/wallets`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

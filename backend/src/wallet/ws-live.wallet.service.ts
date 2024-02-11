@@ -1,9 +1,11 @@
 import {
   ConnectedSocket,
+  OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
   WebSocketGateway,
-  WebSocketServer, WsException,
+  WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from '../auth/auth.service';
@@ -13,13 +15,15 @@ import { UserDto } from '../users/dto/user.dto';
 import { WalletService } from './wallet.service';
 
 @WebSocketGateway({
-  namespace: 'live',
   cors: {
     origin: '*',
     credentials: true,
   },
+  allowEIO3: true,
 })
-export class WalletLiveService implements OnGatewayInit, OnGatewayDisconnect {
+export class WalletLiveService
+  implements OnGatewayInit, OnGatewayDisconnect, OnGatewayConnection
+{
   @WebSocketServer()
   server: Server;
   private registeredClients: Map<Socket, UserDto> = new Map<Socket, UserDto>();
@@ -57,13 +61,17 @@ export class WalletLiveService implements OnGatewayInit, OnGatewayDisconnect {
   }
 
   private getUserFromSocket(socket: Socket): Promise<UserDto | undefined> {
-    const bearerToken = ExtractJwt.fromAuthHeaderAsBearerToken()(
+    // Get auth header
+    let authToken = ExtractJwt.fromHeader('sec-websocket-protocol')(
       socket.request,
     );
+    if (!authToken) {
+      authToken = ExtractJwt.fromAuthHeaderAsBearerToken()(socket.request);
+    }
     return new Promise(async (resolve, reject) => {
       try {
         const user =
-          await this.authService.getUserFromAuthenticationToken(bearerToken);
+          await this.authService.getUserFromAuthenticationToken(authToken);
         if (user) {
           resolve(user);
         } else {
@@ -83,4 +91,10 @@ export class WalletLiveService implements OnGatewayInit, OnGatewayDisconnect {
       await this.sendWalletUpdates();
     }, 5000);
   }
+
+  async handleConnection(client: Socket, ...args: any[]) {
+
+  }
 }
+
+
