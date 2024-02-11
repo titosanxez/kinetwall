@@ -52,7 +52,7 @@ export class WalletService {
       id: dbWallet.id,
       address: dbWallet.address,
       owner: dbWallet.owner,
-      balance: ethers.formatEther(balance.toString()),
+      balance: parseFloat(ethers.formatEther(balance.toString())).toFixed(4),
     };
   }
 }

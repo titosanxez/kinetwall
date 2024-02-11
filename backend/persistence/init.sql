@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS wallets;
 DROP TYPE IF EXISTS WALLET_TOKEN_TYPE;
 
 CREATE TABLE users (
@@ -17,4 +18,4 @@ CREATE TABLE wallets (
     owner UUID NOT NULL
 );
 
-CREATE UNIQUE INDEX owner_idx ON wallets (owner);
+CREATE UNIQUE INDEX address_idx ON wallets (address);
